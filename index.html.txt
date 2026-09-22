@@ -1,0 +1,125 @@
+ {title:"TUNE MY WAY",date:"2023年4月7日",kind:"Digital Single",credit:"作詞・作曲：クボナオキ / 振付：SACO MAKITA"},
+ {title:"CATCH YOU",date:"2023年5月20日",kind:"Digital"},
+ {title:"きゅきゅきゅキュート",date:"2023年6月27日",kind:"Digital"},
+ {title:"WAO！アオハル！",date:"2023年9月27日",kind:"Digital"},
+ {title:"Twilight Dilemma",date:"2023年10月18日",kind:"Digital"},
+ {title:"必殺あざとポーズ",date:"2023年11月17日",kind:"Digital"},
+ {title:"備えあれば無問題",date:"2024年2月16日",kind:"Digital"},
+ {title:"いえなかったことば〜ありがとう〜",date:"2024年3月8日",kind:"Digital"},
+ {title:"倍倍FIGHT!",date:"2024年4月24日",kind:"Digital"},
+ {title:"レイドバックジャーニー",date:"2024年6月19日",kind:"Digital"},
+ {title:"キス・ミー・パティシエ",date:"2024年8月7日",kind:"1st Single CD"},
+ {title:"君もゾンビですか ゾンビですね",date:"2024年10月18日",kind:"Digital"},
+ {title:"レベチかわいい！",date:"2025年3月12日",kind:"Digital"},
+ {title:"絶対きゃんちゅー宣言っ！",date:"2025年4月4日",kind:"Digital"},
+ {title:"推し♡好き♡しんどい",date:"2025年4月23日",kind:"2nd Single CD"},
+ {title:"夏しかサマーー！♡",date:"2025年7月14日",kind:"Digital"},
+ {title:"LASTING TUNE",date:"2025年9月10日",kind:"Digital"},
+ {title:"倍倍FIGHT!",date:"2025年10月1日",kind:"1st Album"},
+ {title:"HAPPY BOUNCE BIRTHDAY",date:"2026年4月22日",kind:"3rd Single CD",tracks:["HAPPY BOUNCE BIRTHDAY","HOT!SCOOP!","すーぱー優勝ちゅーーん！","シャットダウン！","いえなかったことば〜ありがとう〜"]},
+ {title:"総意♡So Free / スペシャル感謝祭",date:"2026年9月30日",kind:"4th Single CD"}
+];
+const GROUP=[
+ {text:"CANDY TUNEは7人組アイドルグループである。",a:true,e:"公式プロフィールでは7人組と紹介されています。"},
+ {text:"CANDY TUNEはKAWAII LAB.から誕生したグループである。",a:true,e:"アソビシステムのアイドルプロジェクトKAWAII LAB.よりデビューしました。"},
+ {text:"CANDY TUNEのデビュー日は2023年3月14日である。",a:true,e:"公式プロフィール記載のデビュー日は2023年3月14日です。"},
+ {text:"グループ名のTUNEには「旋律」という意味が込められている。",a:true,e:"公式プロフィールのグループ名由来でTUNE（旋律）と説明されています。"},
+ {text:"CANDY TUNEは2024年3月14日にデビューした。",a:false,e:"デビュー日は2023年3月14日です。"},
+ {text:"CANDY TUNEは8人組である。",a:false,e:"公式プロフィールでは7人組です。"},
+ {text:"2026年2月発売のKAWAII LAB. BEST ALBUMで、CANDY TUNEのファン投票選出曲として「必殺あざとポーズ」が収録された。",a:true,e:"公式発表ではCANDY TUNEのファン投票選出曲は「必殺あざとポーズ」です。"}
+];
+const THIRD=["HAPPY BOUNCE BIRTHDAY","HOT!SCOOP!","すーぱー優勝ちゅーーん！","シャットダウン！","いえなかったことば〜ありがとう〜"];
+const FIRSTDA=["キス・ミー・パティシエ","hanamaru","ナナイロプロローグ","未完な青春"];
+const SRC={profile:"CANDY TUNE公式 PROFILE",disc:"CANDY TUNE公式 DISCOGRAPHY",news:"CANDY TUNE公式 INFORMATION"};
+const $=x=>document.getElementById(x),pick=a=>a[Math.floor(Math.random()*a.length)];
+const shuffle=a=>{a=[...a];for(let i=a.length-1;i;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const dateNum=s=>Number(s.replace(/年|月/g,"").replace("日","").padEnd(8,"0"));
+function wrongDate(w){let a=WORKS.filter(x=>x.date!==w.date);return pick(a).date}
+function diffOK(d,want){return want==="mix"||d===want}
+function qMember(filter,d){
+ let pool=filter==="all"?MEMBERS:MEMBERS.filter(m=>m.name===filter);let m=pick(pool), mode=d==="easy"?Math.floor(Math.random()*2):Math.floor(Math.random()*5);
+ if(mode===0)return Q("member",d,`${m.name}はCANDY TUNEのメンバーである。`,true,`${m.name}さんは公式プロフィール掲載メンバーです。`,SRC.profile,m.name);
+ if(mode===1)return Q("member",d,`${m.name}の誕生日は${m.birthday}である。`,true,`公式プロフィールでは${m.name}さんの誕生日は${m.birthday}です。`,SRC.profile,m.name);
+ let o=pick(MEMBERS.filter(x=>x.name!==m.name));
+ if(mode===2)return Q("member",d,`${m.name}の誕生日は${o.birthday}である。`,false,`${m.name}さんの誕生日は${m.birthday}です。`,SRC.profile,m.name);
+ if(mode===3){let younger=Number(m.birthday.slice(0,4))>Number(o.birthday.slice(0,4));return Q("member","hard",`${m.name}は${o.name}より後の年に生まれている。`,younger,`${m.name}さんは${m.birthday}、${o.name}さんは${o.birthday}生まれです。`,SRC.profile,m.name)}
+ return Q("member","hard",`${m.name}と${o.name}は同じ生まれ年である。`,m.birthday.slice(0,4)===o.birthday.slice(0,4),`${m.name}さんは${m.birthday}、${o.name}さんは${o.birthday}生まれです。`,SRC.profile,m.name);
+}
+function qMusic(d){
+ let w=pick(WORKS);
+ if(d==="easy")return Q("music","easy",`「${w.title}」はCANDY TUNE公式ディスコグラフィーに掲載されている作品である。`,true,`「${w.title}」は公式ディスコグラフィー掲載作品です。`,SRC.disc);
+ if(d==="normal"){
+   if(Math.random()<.5)return Q("music","normal",`「${w.title}」のリリース日は${w.date}である。`,true,`公式掲載日は${w.date}です。`,SRC.disc);
+   return Q("music","normal",`「${w.title}」のリリース日は${wrongDate(w)}である。`,false,`公式掲載日は${w.date}です。`,SRC.disc);
+ }
+ let a=pick(WORKS),b=pick(WORKS.filter(x=>x!==a));let ans=dateNum(a.date)<dateNum(b.date);
+ return Q("music","hard",`「${a.title}」は「${b.title}」より先にリリースされた。`,ans,`「${a.title}」は${a.date}、「${b.title}」は${b.date}です。`,SRC.disc);
+}
+function qTracks(d){
+ if(Math.random()<.5){
+  let t=pick(THIRD),good=Math.random()<.55,shown=good?t:pick(FIRSTDA.filter(x=>!THIRD.includes(x)));
+  return Q("release",d,`「${shown}」は3rdシングルCD「HAPPY BOUNCE BIRTHDAY」の収録曲として公式発表された。`,good,good?`公式発表の収録曲に「${shown}」が含まれます。`:`「${shown}」は公式発表された同CDの5曲には含まれません。`,SRC.news);
+ }else{
+  let t=pick(FIRSTDA),good=Math.random()<.55,shown=good?t:pick(THIRD.filter(x=>!FIRSTDA.includes(x)));
+  return Q("release",d,`「${shown}」は2023年3月7日配信の1st Digital Album「CANDY TUNE」の歌唱曲4曲の一つである。`,good,good?`1st Digital Albumの歌唱曲に「${shown}」が収録されています。`:`同作の歌唱曲4曲は「キス・ミー・パティシエ」「hanamaru」「ナナイロプロローグ」「未完な青春」です。`,SRC.disc);
+ }
+}
+function qHistory(d){let g=pick(GROUP);return Q("history",d,g.text,g.a,g.e,g.text.includes("BEST")?SRC.news:SRC.profile)}
+function qCredit(){
+ let good=Math.random()<.5;
+ return Q("music","hard",good?`「TUNE MY WAY」はクボナオキが作詞・作曲を担当した。`:`「TUNE MY WAY」の振付はクボナオキが担当した。`,good,good?`公式ディスコグラフィーでは作詞・作曲はクボナオキと記載されています。`:`公式記載では振付はSACO MAKITA、作詞・作曲はクボナオキです。`,SRC.disc);
+}
+function Q(genre,d,text,a,e,s,member=""){return{genre,d,text,a,e,s,member}}
+function makeQ(settings,used){
+ let gens=[];
+ if(settings.genre==="all"||settings.genre==="member")gens.push(()=>qMember(settings.member,settings.d));
+ if(settings.genre==="all"||settings.genre==="music")gens.push(()=>Math.random()<.25?qCredit():qMusic(settings.d));
+ if(settings.genre==="all"||settings.genre==="history")gens.push(()=>qHistory(settings.d));
+ if(settings.genre==="all"||settings.genre==="release")gens.push(()=>qTracks(settings.d));
+ if(settings.member!=="all")gens=[()=>qMember(settings.member,settings.d)];
+ for(let n=0;n<150;n++){let q=pick(gens)();if(diffOK(q.d,settings.d)&&!used.has(q.text)){used.add(q.text);return q}}
+ let q=pick(gens)();used.add(q.text);return q;
+}
+
+MEMBERS.forEach(m=>{let o=document.createElement("option");o.value=o.textContent=m.name;$("memberFilter").appendChild(o)});
+let mode="solo",idx=0,total=10,cur,used=new Set(),scores=[0,0],turn=0,settings;
+function setMode(m){mode=m;$("soloTab").classList.toggle("on",m==="solo");$("vsTab").classList.toggle("on",m==="vs");$("soloNames").classList.toggle("hidden",m!=="solo");$("vsNames").classList.toggle("hidden",m!=="vs")}
+$("soloTab").onclick=()=>setMode("solo");$("vsTab").onclick=()=>setMode("vs");
+$("start").onclick=()=>{
+ total=+$("count").value;idx=0;scores=[0,0];turn=0;used=new Set();
+ settings={d:$("difficulty").value,genre:$("genre").value,member:$("memberFilter").value};
+ $("setup").classList.add("hidden");$("finish").classList.add("hidden");$("quiz").classList.remove("hidden");show();
+};
+function show(){
+ cur=makeQ(settings,used);$("prog").textContent=`${idx+1} / ${total}`;$("level").textContent={easy:"初級",normal:"中級",hard:"超難問",mix:"MIX"}[cur.d];
+ $("cat").textContent={member:"メンバー",music:"楽曲知識",history:"グループ・歴史",release:"収録作品"}[cur.genre];
+ $("q").textContent=cur.text;$("result").className="result";$("next").classList.add("hidden");$("answers").classList.remove("hidden");
+ if(mode==="solo"){$("turn").classList.add("hidden");$("score").textContent=`正解 ${scores[0]}`}
+ else{let names=[$("p1").value||"プレイヤー1",$("p2").value||"プレイヤー2"];$("turn").classList.remove("hidden");$("turn").textContent=`${names[turn]} の問題`;$("score").textContent=`${names[0]} ${scores[0]}点 ｜ ${names[1]} ${scores[1]}点`}
+}
+document.querySelectorAll("[data-a]").forEach(b=>b.onclick=()=>{
+ let ok=(b.dataset.a==="true")===cur.a;if(ok)scores[turn]++;
+ $("result").className="result "+(ok?"ok":"ng");$("rt").textContent=ok?"正解！":"不正解…";$("exp").textContent=`答え：${cur.a?"○":"×"}　${cur.e}`;$("src").textContent=`出典：${cur.s}`;
+ $("answers").classList.add("hidden");$("next").classList.remove("hidden");
+});
+$("next").onclick=()=>{idx++;if(idx>=total)finishGame();else{if(mode==="vs")turn=1-turn;show()}};
+function finishGame(){
+ $("quiz").classList.add("hidden");$("finish").classList.remove("hidden");
+ if(mode==="solo"){
+  let name=$("soloName").value.trim()||"ゲスト",pct=Math.round(scores[0]/total*100);
+  $("final").innerHTML=`<p><b>${name}</b>：${total}問中 <b>${scores[0]}問正解</b>（${pct}%）</p>`;
+  saveRank(name,scores[0],total,{easy:"初級",normal:"中級",hard:"超難問",mix:"MIX"}[settings.d]);
+ }else{
+  let n=[$("p1").value||"プレイヤー1",$("p2").value||"プレイヤー2"],msg=scores[0]===scores[1]?"引き分け！":`${n[scores[0]>scores[1]?0:1]}の勝ち！`;
+  $("final").innerHTML=`<p>${n[0]}：<b>${scores[0]}点</b><br>${n[1]}：<b>${scores[1]}点</b></p><h2>${msg}</h2>`;
+ }
+ renderRank();
+}
+$("again").onclick=()=>{$("finish").classList.add("hidden");$("setup").classList.remove("hidden")};
+function saveRank(name,score,total,diff){let r=JSON.parse(localStorage.getItem("kyanchuRank")||"[]");r.push({name,score,total,diff,pct:score/total,date:Date.now()});r.sort((a,b)=>b.pct-a.pct||b.score-a.score||a.date-b.date);localStorage.setItem("kyanchuRank",JSON.stringify(r.slice(0,20)))}
+function renderRank(){let r=JSON.parse(localStorage.getItem("kyanchuRank")||"[]");$("ranking").innerHTML=r.length?r.slice(0,10).map((x,i)=>`<tr><td>${i+1}</td><td>${esc(x.name)}</td><td>${x.score}/${x.total} (${Math.round(x.pct*100)}%)</td><td><span class="pill">${x.diff}</span></td></tr>`).join(""):`<tr><td colspan="4">まだ記録がありません</td></tr>`}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+$("clearRank").onclick=()=>{if(confirm("この端末のランキングを消去しますか？")){localStorage.removeItem("kyanchuRank");renderRank()}};
+renderRank();
+</script>
+</body></html>
